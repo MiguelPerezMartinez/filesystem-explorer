@@ -1,5 +1,5 @@
 <?php
-session_start()
+session_start();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -65,6 +65,14 @@ session_start()
 <script src="main.js"></script>
 <script src="contextMenu/contextMenu.js"></script>
 
+<?php
+if (isset($_GET['fileUploaded'])) {
+  echo "<script type='text/javascript'>
+  selectFolder('" . $_SESSION['prevPath'] . "');
+  </script>";
+}
+?>
+
 
 <template id="create-folder-modal">
   <div class="modal-background"></div>
@@ -89,9 +97,9 @@ session_start()
       <h4>Location: </h4>
       <p id="session-path-upload"></p>
     </div>
-    <form type="post" action="fileControll/uploadFile.php">
-      <input id="upload-file-name" type="file" required />
-      <button type="submit" id="upload-file-btn">UPLOAD FILE</button>
+    <form type="post" method="POST" action="fileControll/uploadFile.php" enctype="multipart/form-data">
+      <input id="upload-file-name" type="file" name="file" required />
+      <button id="upload-file-btn" type="submit" name="submit">UPLOAD FILE</button>
     </form>
   </div>
 </template>

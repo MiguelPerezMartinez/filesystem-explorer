@@ -31,6 +31,9 @@ $(document).on("click", (e) => {
   if (targetIdName === "edit-folder") {
     openEditFolderModal();
   }
+  if (targetIdName === "delete-folder") {
+    openDeleteFolderModal();
+  }
   if (targetClassName.indexOf("modal-background") !== -1) {
     if ($(".create-folder-modal")) {
       closeCreateFolderModal();
@@ -44,6 +47,9 @@ $(document).on("click", (e) => {
   }
   if (targetIdName === "edit-folder-btn") {
     editFolder(e);
+  }
+  if (targetIdName === "delete-folder-btn") {
+    deleteFolder(e);
   }
 });
 
@@ -94,15 +100,13 @@ function searchFileInfo(path) {
   });
 }
 
-function deleteFile(path) {
+function deleteFile() {
   $.ajax({
     url: "fileControll/deleteFile.php",
     success: function (response) {
-      $(".file-info-container").html(response);
-
-      var split = path.split("/");
-      path = split.slice(0, split.length - 1).join("/");
-      selectFolder(path);
+      var split = response.split("/");
+      response = split.slice(0, split.length - 1).join("/");
+      selectFolder(response);
     },
   });
 }
@@ -198,6 +202,39 @@ function openUploadFileModal() {
         .querySelector("main")
         .appendChild(document.importNode(templateContent, true));
       $("#session-path-upload").html(response);
+    },
+  });
+}
+
+function openDeleteFolderModal() {
+  $.ajax({
+    url: "fileControll/session.php",
+    success: function (response) {
+      const templateContent = document.querySelector(
+        "#delete-folder-modal"
+      ).content;
+      document
+        .querySelector("main")
+        .appendChild(document.importNode(templateContent, true));
+      $("#delete-folder-name").val(path);
+    },
+  });
+}
+
+function closeDeleteFolderModal() {
+  document.querySelector(".delete-folder-modal")?.remove();
+  document.querySelector(".modal-background")?.remove();
+}
+
+function deleteFolder(e) {
+  e.preventDefault();
+  $.ajax({
+    type: "POST",
+    url: "fileControll/deleteFileFolder.php",
+    data: { valid: "yes" },
+    success: function (response) {
+      selectFolder(response);
+      closeDeleteFolderModal();
     },
   });
 }

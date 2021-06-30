@@ -17,7 +17,8 @@ if (isset($_POST['submit'])) {
             $fileDestination = $sessionPath . DIRECTORY_SEPARATOR . $fileName;
             move_uploaded_file($fileTmpName, $fileDestination);
             $_SESSION["prevPath"] = $_SESSION["path"];
-            header("Location: /filesystem-explorer/src/index.php?fileUploaded=true");
+            $_SESSION["fileUploaded"] = true;
+            header("Location: /filesystem-explorer/src/index.php");
         } else {
             echo "Your file is too big";
         }
